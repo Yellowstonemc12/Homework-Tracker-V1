@@ -16,4 +16,7 @@ def home():
         "homework": "Math"
     }).execute()
 
-    return {"success": True, "data": result.data}
+    return {
+        "success": True,
+        "data": result.data
+    }
