@@ -334,6 +334,13 @@ def home(user: str = ""):
     """
 
 # ===== HISTORY PAGE =====
+
+@app.get("/debug-history")
+def debug_history():
+    result = supabase.table("history").select("*").execute()
+    return result.data
+
+
 @app.get("/history", response_class=HTMLResponse)
 def history_page(user: str = ""):
     
