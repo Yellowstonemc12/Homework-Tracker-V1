@@ -343,11 +343,17 @@ def debug_history():
 
 @app.get("/history", response_class=HTMLResponse)
 def history_page(user: str = ""):
-    
-    user_history = history_store.get(user, [])
+
+    result = (
+        supabase.table("history")
+        .select("*")
+        .eq("username", user)
+        .execute()
+    )
+
+    user_history = result.data
 
     history_rows = ""
-
     for item in user_history:
         history_rows += f"""
         <tr>
@@ -359,16 +365,15 @@ def history_page(user: str = ""):
         """
 
     student_names = sorted(
-    list(
-        set(
-            item["student"]
-            for item in user_history
+        list(
+            set(
+                item["student"]
+                for item in user_history
+            )
         )
     )
-)
 
     options = ""
-
     for student in student_names:
         options += f"""
         <option value="{student}">
@@ -378,79 +383,55 @@ def history_page(user: str = ""):
 
     return f"""
     {style()}
-
     <div class="wrapper">
-
         <div class="card">
-
             <h2>📜 History</h2>
-
             <table>
-
                 <tr>
                     <th>Date</th>
                     <th>Homework</th>
                     <th>Student</th>
                     <th>Priority</th>
                 </tr>
-
                 {history_rows}
-
             </table>
-
         </div>
 
         <div class="card">
-
             <h3>Delete Student History</h3>
-
             <form method="post"
                   action="/delete-student?user={user}">
-
                 <select name="student">
                     {options}
                 </select>
-
                 <button>
                     Delete Student History
                 </button>
-
             </form>
-
         </div>
 
         <div class="card">
-
             <form method="post"
                   action="/delete-all?user={user}">
-
                 <button class="logout">
                     Delete All History
                 </button>
-
             </form>
-
         </div>
 
         <div class="card">
-
             <form action="/home"
                   method="get">
-
                 <input
                     type="hidden"
                     name="user"
                     value="{user}"
                 >
-
                 <button>
                     ← Back
                 </button>
-
             </form>
-
         </div>
-
     </div>
     """
 
@@ -481,19 +462,27 @@ async def add(request: Request):
 @app.post("/complete/{user}/{item_id}")
 def complete(user: str, item_id: int):
 
-    if user in data_store:
+    result = (
+        supabase.table("homework")
+        .select("*")
+        .eq("id", item_id)
+        .execute()
+    )
 
-        for i, item in enumerate(data_store[user]):
+    if result.data:
+        item = result.data[0]
 
-            if item["id"] == item_id:
+        supabase.table("history").insert({
+            "username": user,
+            "homework": item["homework"],
+            "student": item["student"],
+            "priority": item["priority"]
+        }).execute()
 
-                if user not in history_store:
-                    history_store[user] = []
-                
-                history_store[user].append(item)
-
-                data_store[user].pop(i)
-                break
+        supabase.table("homework") \
+            .delete() \
+            .eq("id", item_id) \
+            .execute()
 
     return RedirectResponse(
         url=f"/home?user={user}",
@@ -507,15 +496,13 @@ async def delete_student(
     user: str = ""
 ):
     form = await request.form()
-
     student = form.get("student")
 
-    if user in history_store:
-        history_store[user] = [
-            item
-            for item in history_store[user]
-            if item["student"] != student
-        ]
+    supabase.table("history") \
+        .delete() \
+        .eq("username", user) \
+        .eq("student", student) \
+        .execute()
 
     return RedirectResponse(
         url=f"/history?user={user}",
@@ -526,8 +513,10 @@ async def delete_student(
 @app.post("/delete-all")
 def delete_all(user: str = ""):
 
-    if user in history_store:
-        history_store[user] = []
+    supabase.table("history") \
+        .delete() \
+        .eq("username", user) \
+        .execute()
 
     return RedirectResponse(
         url=f"/history?user={user}",
