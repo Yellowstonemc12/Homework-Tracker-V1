@@ -14,35 +14,6 @@ supabase = create_client(
     SUPABASE_KEY
 )
 
-@app.get("/debug")
-def debug():
-    return {
-        "url": SUPABASE_URL
-    }
-
-@app.get("/supabase-test")
-async def supabase_test():
-    try:
-        result = supabase.table("test_connection").insert({
-            "message": "Hello from Vercel!"
-        }).execute()
-
-        return {
-            "success": True,
-            "data": result.data
-        }
-
-    except Exception as e:
-        return {
-            "success": False,
-            "error": str(e)
-        }
-
-
-# ===== MEMORY STORAGE =====
-data_store = {}
-history_store = {}
-
 # ===== STYLE =====
 def style():
     return """
@@ -205,7 +176,14 @@ def home(user: str = ""):
     if not user:
         return RedirectResponse("/", status_code=303)
 
-    active = data_store.get(user, [])
+    result = (
+        supabase.table("homework")
+        .select("*")
+        .eq("username", user)
+        .execute()
+    )
+
+    active = result.data
 
     total = len(active)
 
@@ -223,7 +201,7 @@ def home(user: str = ""):
     for item in active:
         rows += f"""
         <tr>
-            <td>{item['date']}</td>
+            <td>{item['date_created'][:10]}</td>
             <td>{item['homework']}</td>
             <td>{item['student']}</td>
             <td>{item['priority']}</td>
@@ -366,7 +344,7 @@ def history_page(user: str = ""):
     for item in user_history:
         history_rows += f"""
         <tr>
-            <td>{item['date']}</td>
+            <td>{item['completed_at'][:10]}</td>
             <td>{item['homework']}</td>
             <td>{item['student']}</td>
             <td>{item['priority']}</td>
@@ -480,16 +458,12 @@ async def add(request: Request):
     student = form.get("student")
     priority = form.get("priority")
 
-    if user not in data_store:
-        data_store[user] = []
-
-    data_store[user].append({
-        "id": len(data_store[user]) + 1,
-        "date": datetime.now().strftime("%Y-%m-%d"),
+    supabase.table("homework").insert({
+        "username": user,
         "homework": homework,
         "student": student,
         "priority": priority
-    })
+    }).execute()
 
     return RedirectResponse(
         url=f"/home?user={user}",
