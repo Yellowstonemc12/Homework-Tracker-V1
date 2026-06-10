@@ -14,9 +14,11 @@ supabase = create_client(
     SUPABASE_KEY
 )
 
-@app.get("/hello")
-def hello():
-    return {"message": "hello"}
+@app.get("/debug")
+def debug():
+    return {
+        "url": SUPABASE_URL
+    }
 
 @app.get("/supabase-test")
 async def supabase_test():
@@ -29,11 +31,6 @@ async def supabase_test():
         "data": result.data
     }
 
-@app.get("/debug")
-def debug():
-    return {
-        "url": SUPABASE_URL
-    }
 
 # ===== MEMORY STORAGE =====
 data_store = {}
