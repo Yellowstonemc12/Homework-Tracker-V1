@@ -22,14 +22,21 @@ def debug():
 
 @app.get("/supabase-test")
 async def supabase_test():
-    result = supabase.table("test_connection").insert({
-        "message": "Hello from Vercel!"
-    }).execute()
+    try:
+        result = supabase.table("test_connection").insert({
+            "message": "Hello from Vercel!"
+        }).execute()
 
-    return {
-        "success": True,
-        "data": result.data
-    }
+        return {
+            "success": True,
+            "data": result.data
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
 
 # ===== MEMORY STORAGE =====
