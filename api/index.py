@@ -14,6 +14,10 @@ supabase = create_client(
     SUPABASE_KEY
 )
 
+@app.get("/hello")
+def hello():
+    return {"message": "hello"}
+
 @app.get("/supabase-test")
 async def supabase_test():
     result = supabase.table("test_connection").insert({
