@@ -436,6 +436,12 @@ def history_page(user: str = ""):
     """
 
 # ===== ADD =====
+
+@app.get("/debug-homework")
+def debug_homework():
+    result = supabase.table("homework").select("*").execute()
+    return result.data
+
 @app.post("/add")
 async def add(request: Request):
 
