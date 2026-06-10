@@ -25,6 +25,12 @@ async def supabase_test():
         "data": result.data
     }
 
+@app.get("/debug")
+def debug():
+    return {
+        "url": SUPABASE_URL
+    }
+
 # ===== MEMORY STORAGE =====
 data_store = {}
 history_store = {}
