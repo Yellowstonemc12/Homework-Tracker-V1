@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
+import os
+from supabase import create_client
 from datetime import datetime
 
 app = FastAPI()
