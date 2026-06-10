@@ -1,5 +1,8 @@
 from fastapi import FastAPI, Request
+from fastapi import UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
+import csv
+import io
 import os
 from supabase import create_client
 from datetime import datetime
@@ -335,12 +338,6 @@ def home(user: str = ""):
 
 # ===== HISTORY PAGE =====
 
-@app.get("/debug-history")
-def debug_history():
-    result = supabase.table("history").select("*").execute()
-    return result.data
-
-
 @app.get("/history", response_class=HTMLResponse)
 def history_page(user: str = ""):
 
@@ -435,22 +432,100 @@ def history_page(user: str = ""):
     </div>
     """
 
-# ===== ADD =====
 
 @app.get("/debug-homework")
 def debug_homework():
     result = supabase.table("homework").select("*").execute()
     return result.data
 
+@app.get("/debug-students")
+def debug_students():
+    result = supabase.table("students").select("*").execute()
+    return result.data
+
+@app.get("/debug-history")
+def debug_history():
+    result = supabase.table("history").select("*").execute()
+    return result.data
+
+# ===== IMPORT PAGE =====
+
+@app.get("/import", response_class=HTMLResponse)
+def import_page(user: str = ""):
+    return f"""
+    {style()}
+    <div class="wrapper">
+        <div class="card">
+            <h2>📂 Import Students</h2>
+
+            <form
+                method="post"
+                action="/import?user={user}"
+                enctype="multipart/form-data"
+            >
+                <input
+                    type="file"
+                    name="file"
+                    accept=".csv"
+                    required
+                >
+
+                <button>
+                    Upload CSV
+                </button>
+            </form>
+        </div>
+    </div>
+    """
+
+    
+@app.post("/import")
+async def import_csv(
+    file: UploadFile = File(...),
+    user: str = ""
+):
+    content = await file.read()
+
+    text = content.decode("utf-8")
+
+    reader = csv.DictReader(
+        io.StringIO(text)
+    )
+
+    for row in reader:
+
+        supabase.table("students").insert({
+            "username": user,
+            "index_no": row["IndexNo"],
+            "student_name": row["Name"]
+        }).execute()
+
+    return HTMLResponse("""
+    <h2>Upload Complete ✅</h2>
+    <a href="/import">Back</a>
+    """)
+    
+# ===== ADD =====
+
 @app.post("/add")
 async def add(request: Request):
-
     form = await request.form()
 
     user = form.get("user")
     homework = form.get("homework")
     student = form.get("student")
     priority = form.get("priority")
+
+    student_result = (
+        supabase.table("students")
+        .select("*")
+        .eq("username", user)
+        .eq("index_no", student)
+        .execute()
+    )
+
+    if student_result.data:
+        student = student_result.data[0]["student_name"]
 
     supabase.table("homework").insert({
         "username": user,
