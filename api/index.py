@@ -6,6 +6,14 @@ from datetime import datetime
 
 app = FastAPI()
 
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+
+supabase = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
+)
+
 # ===== MEMORY STORAGE =====
 data_store = {}
 history_store = {}
