@@ -14,6 +14,17 @@ supabase = create_client(
     SUPABASE_KEY
 )
 
+@app.get("/supabase-test")
+async def supabase_test():
+    result = supabase.table("test_connection").insert({
+        "message": "Hello from Vercel!"
+    }).execute()
+
+    return {
+        "success": True,
+        "data": result.data
+    }
+
 # ===== MEMORY STORAGE =====
 data_store = {}
 history_store = {}
