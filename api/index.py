@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi import UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
 import csv
+import json
 import io
 import os
 from supabase import create_client
@@ -253,6 +254,61 @@ def home(user: str = ""):
         </div>
         """
 
+
+    student_lookup = {}
+
+    students_data = (
+        supabase.table("students")
+        .select("index_no, student_name")
+        .eq("username", user)
+        .execute()
+    )
+    
+    for row in students_data.data:
+        student_lookup[row["index_no"]] = row["student_name"]
+
+    student_json = json.dumps(student_lookup)
+
+
+
+    <script>
+    const students = {student_json};
+    
+    function identifyStudent() {
+    
+        const value =
+            document.getElementById(
+                "studentInput"
+            ).value.toLowerCase();
+    
+        let found = "";
+    
+        for (const [indexNo, name] of Object.entries(students)) {
+    
+            if (
+                indexNo.toLowerCase().includes(value) ||
+                name.toLowerCase().includes(value)
+            ) {
+                found = name;
+                break;
+            }
+        }
+    
+        const box =
+            document.getElementById(
+                "studentMatch"
+            );
+    
+        if (found) {
+            box.innerHTML =
+                "Student identified: " + found;
+        } else {
+            box.innerHTML = "";
+        }
+    }
+    </script>
+
+    
     return f"""
     {style()}
 
@@ -334,10 +390,22 @@ def home(user: str = ""):
                 >
 
                 <input
+                    id="studentInput"
                     name="student"
                     placeholder="Student"
                     required
+                    oninput="identifyStudent()"
                 >
+                
+                <div
+                    id="studentMatch"
+                    style="
+                        margin-top:4px;
+                        font-size:14px;
+                        color:#6d28d9;
+                    "
+                >
+                </div>
 
                 <select name="priority">
                     <option>Low</option>
