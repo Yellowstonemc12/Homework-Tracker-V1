@@ -455,6 +455,7 @@ def home(user: str = ""):
                 box.innerHTML = "";
             }}, 250);
         }}
+        }}
 
     </script>
                  
