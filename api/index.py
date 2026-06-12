@@ -476,6 +476,10 @@ def debug_homework():
     result = supabase.table("homework").select("*").execute()
     return result.data
 
+@app.get("/debug-import")
+def debug_import():
+    return {"ok": True}
+
 @app.get("/debug-students")
 def debug_students():
     result = supabase.table("students").select("*").execute()
@@ -531,17 +535,13 @@ async def import_csv(
     )
 
     for row in reader:
-
+        print(row)
+    
         supabase.table("students").insert({
             "username": user,
-            "index_no": row["IndexNo"],
-            "student_name": row["Name"]
+            "index_no": row.get("IndexNo"),
+            "student_name": row.get("Name")
         }).execute()
-
-    return HTMLResponse("""
-    <h2>Upload Complete ✅</h2>
-    <a href="/import">Back</a>
-    """)
     
 # ===== ADD =====
 
