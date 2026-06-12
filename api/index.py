@@ -366,6 +366,11 @@ def home(user: str = ""):
                         margin-top:4px;
                         font-size:14px;
                         color:#6d28d9;
+                        opacity:0;
+                        transform:translateY(-3px);
+                        transition:
+                            opacity 0.25s ease,
+                            transform 0.25s ease;
                     "
                 >
                 </div>
@@ -432,14 +437,25 @@ def home(user: str = ""):
             document.getElementById(
                 "studentMatch"
             );
-    
+
+
         if (found) {{
             box.innerHTML =
-                "Student identified: " + found;
+                "✅ Student identified: " + found;
+        
+            box.style.opacity = "1";
+            box.style.transform =
+                "translateY(0)";
         }} else {{
-            box.innerHTML = "";
+            box.style.opacity = "0";
+            box.style.transform =
+                "translateY(-3px)";
+        
+            setTimeout(() => {{
+                box.innerHTML = "";
+            }}, 250);
         }}
-    }}
+
     </script>
                  
     """
