@@ -527,21 +527,27 @@ async def import_csv(
     user: str = ""
 ):
     content = await file.read()
-
     text = content.decode("utf-8")
 
-    reader = csv.DictReader(
+    reader = csv.reader(
         io.StringIO(text)
     )
 
     for row in reader:
-        print(row)
-    
+
+        if len(row) < 2:
+            continue
+
         supabase.table("students").insert({
             "username": user,
-            "index_no": row.get("IndexNo"),
-            "student_name": row.get("Name")
+            "index_no": row[0],
+            "student_name": row[1]
         }).execute()
+
+    return RedirectResponse(
+        url=f"/home?user={user}",
+        status_code=303
+    )
     
 # ===== ADD =====
 
