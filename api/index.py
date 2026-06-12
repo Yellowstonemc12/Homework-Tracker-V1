@@ -420,6 +420,23 @@ def home(user: str = ""):
                 "studentInput"
             ).value.toLowerCase();
     
+        const box =
+            document.getElementById(
+                "studentMatch"
+            );
+    
+        if (value.trim() === "") {{
+            box.style.opacity = "0";
+            box.style.transform =
+                "translateY(-3px)";
+    
+            setTimeout(() => {{
+                box.innerHTML = "";
+            }}, 250);
+    
+            return;
+        }}
+    
         let found = "";
     
         for (const [indexNo, name] of Object.entries(students)) {{
@@ -433,16 +450,10 @@ def home(user: str = ""):
             }}
         }}
     
-        const box =
-            document.getElementById(
-                "studentMatch"
-            );
-
-
         if (found) {{
             box.innerHTML =
                 "✅ Student identified: " + found;
-        
+    
             box.style.opacity = "1";
             box.style.transform =
                 "translateY(0)";
@@ -450,12 +461,12 @@ def home(user: str = ""):
             box.style.opacity = "0";
             box.style.transform =
                 "translateY(-3px)";
-        
+    
             setTimeout(() => {{
                 box.innerHTML = "";
             }}, 250);
         }}
-        }}
+    }}
 
     </script>
                  
