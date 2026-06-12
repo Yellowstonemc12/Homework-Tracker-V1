@@ -196,7 +196,7 @@ def home(user: str = ""):
         .execute()
     )
 
-has_students = len(students_result.data) > 0
+    has_students = len(students_result.data) > 0
 
     total = len(active)
 
