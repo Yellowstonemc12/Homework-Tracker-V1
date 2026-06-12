@@ -267,6 +267,8 @@ def home(user: str = ""):
     for row in students_data.data:
         student_lookup[row["index_no"]] = row["student_name"]
 
+    print(student_lookup)
+    
     student_json = json.dumps(student_lookup)
 
     
@@ -404,41 +406,41 @@ def home(user: str = ""):
 
 
     <script>
-        const students = {student_json};
-        
-        function identifyStudent() {
-        
-            const value =
-                document.getElementById(
-                    "studentInput"
-                ).value.toLowerCase();
-        
-            let found = "";
-        
-            for (const [indexNo, name] of Object.entries(students)) {
-        
-                if (
-                    indexNo.toLowerCase().includes(value) ||
-                    name.toLowerCase().includes(value)
-                ) {
-                    found = name;
-                    break;
-                }
-            }
-        
-            const box =
-                document.getElementById(
-                    "studentMatch"
-                );
-        
-            if (found) {
-                box.innerHTML =
-                    "Student identified: " + found;
-            } else {
-                box.innerHTML = "";
-            }
-        }
-        </script>
+    const students = {student_json};
+    
+    function identifyStudent() {{
+    
+        const value =
+            document.getElementById(
+                "studentInput"
+            ).value.toLowerCase();
+    
+        let found = "";
+    
+        for (const [indexNo, name] of Object.entries(students)) {{
+    
+            if (
+                indexNo.toLowerCase().includes(value) ||
+                name.toLowerCase().includes(value)
+            ) {{
+                found = name;
+                break;
+            }}
+        }}
+    
+        const box =
+            document.getElementById(
+                "studentMatch"
+            );
+    
+        if (found) {{
+            box.innerHTML =
+                "Student identified: " + found;
+        }} else {{
+            box.innerHTML = "";
+        }}
+    }}
+    </script>
                  
     """
 
