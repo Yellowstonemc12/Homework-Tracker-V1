@@ -188,6 +188,16 @@ def home(user: str = ""):
 
     active = result.data
 
+    students_result = (
+        supabase.table("students")
+        .select("id")
+        .eq("username", user)
+        .limit(1)
+        .execute()
+    )
+
+has_students = len(students_result.data) > 0
+
     total = len(active)
 
     students = len(
@@ -215,6 +225,32 @@ def home(user: str = ""):
                 </form>
             </td>
         </tr>
+        """
+
+    import_card = ""
+
+    if not has_students:
+        import_card = f"""
+        <div class="card">
+            <h3>📂 Import Student List</h3>
+    
+            <form
+                method="post"
+                action="/import?user={user}"
+                enctype="multipart/form-data"
+            >
+                <input
+                    type="file"
+                    name="file"
+                    accept=".csv"
+                    required
+                >
+    
+                <button>
+                    Upload CSV
+                </button>
+            </form>
+        </div>
         """
 
     return f"""
@@ -257,6 +293,8 @@ def home(user: str = ""):
             </div>
 
         </div>
+
+        {import_card}
 
         <div class="stats">
 
