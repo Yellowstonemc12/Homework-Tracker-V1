@@ -134,24 +134,26 @@ def style():
 
 
 
+        .records-section{
+        margin-bottom:20px;
+    }
+    
     .website-footer{
         display:flex;
         justify-content:flex-end;
-        margin-top:14px;
+        margin-top:6px;
+        padding-right:6px;
     }
     
     .website-link{
-        color:#9ca3af;
+        color:#b3b3b3;
         text-decoration:none;
-        font-size:13px;
-        font-weight:500;
-    
-        transition:all .2s ease;
+        font-size:12px;
+        transition:0.2s ease;
     }
     
     .website-link:hover{
         color:#8b5cf6;
-        transform:translateX(2px);
     }
     </style>
     """
@@ -409,9 +411,11 @@ def home(user: str = ""):
 
         </div>
 
+        <div class="records-section">
+    
         <div class="card">
             <h3>Records</h3>
-        
+    
             <table>
                 <tr>
                     <th>Date</th>
@@ -422,17 +426,19 @@ def home(user: str = ""):
                 </tr>
                 {rows}
             </table>
-        
-            <div class="website-footer">
-                <a
-                    class="website-link"
-                    href="https://homework-tracker-ys.mystrikingly.com/"
-                    target="_blank"
-                >
-                    🌐 Learn more about Homework Tracker YS →
-                </a>
-            </div>
         </div>
+    
+        <div class="website-footer">
+            <a
+                class="website-link"
+                href="https://homework-tracker-ys.mystrikingly.com/"
+                target="_blank"
+            >
+                🌐 Learn more about Homework Tracker YS →
+            </a>
+        </div>
+    
+    </div>
 
 
     <script>
