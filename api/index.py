@@ -132,17 +132,21 @@ def style():
         border-bottom:1px solid #eee;
     }
 
+
+
+    .website-footer{
+        display:flex;
+        justify-content:flex-end;
+        margin-top:14px;
+    }
+    
     .website-link{
-    display:inline-block;
-    float:right;
-    margin-top:12px;
-
-    color:#9ca3af;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:500;
-
-    transition:all .2s ease;
+        color:#9ca3af;
+        text-decoration:none;
+        font-size:13px;
+        font-weight:500;
+    
+        transition:all .2s ease;
     }
     
     .website-link:hover{
@@ -419,13 +423,15 @@ def home(user: str = ""):
                 {rows}
             </table>
         
-            <a
-                class="website-link"
-                href="https://homework-tracker-ys.mystrikingly.com/"
-                target="_blank"
-            >
-                🌐 Learn more about Homework Tracker YS →
-            </a>
+            <div class="website-footer">
+                <a
+                    class="website-link"
+                    href="https://homework-tracker-ys.mystrikingly.com/"
+                    target="_blank"
+                >
+                    🌐 Learn more about Homework Tracker YS →
+                </a>
+            </div>
         </div>
 
 
