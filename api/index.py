@@ -174,11 +174,30 @@ def login():
             <p>Welcome back.</p>
             
             <form method="post" action="/login">
+            
                 <input
-                    name="username"
-                    placeholder="Username"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
                     required
                 >
+            
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                >
+            
+                <button>Log In</button>
+            
+            </form>
+            
+            <br>
+            
+            <a href="/signup">
+                Create an account
+            </a>
             
                 <button>Log In</button>
             </form>
