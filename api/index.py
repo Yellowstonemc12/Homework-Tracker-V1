@@ -234,12 +234,18 @@ async def do_login(request: Request):
 
     # User doesn't exist
     if not result.data:
-        return HTMLResponse("""
-            <h2>🎉 Account created successfully!</h2>
-            <p>You can now log in.</p>
-            <a href="/">Go to Login</a>
+        return HTMLResponse(f"""
+        {style()}
+        <div class="wrapper">
+            <div class="card">
+                <h2>❌ Login Failed</h2>
+                <p>Invalid email or password.</p>
+                <form action="/" method="get">
+                    <button>← Back to Login</button>
+                </form>
+            </div>
+        </div>
         """)
-
     user = result.data[0]
 
     # Check password
@@ -247,11 +253,18 @@ async def do_login(request: Request):
         password.encode("utf-8"),
         user["password_hash"].encode("utf-8")
     ):
-        return HTMLResponse("""
-            <h2>🎉 Account created successfully!</h2>
-            <p>You can now log in.</p>
-            <a href="/">Go to Login</a>
-        """)
+        return HTMLResponse(f"""
+            {style()}
+            <div class="wrapper">
+                <div class="card">
+                    <h2>❌ Login Failed</h2>
+                    <p>Invalid email or password.</p>
+                    <form action="/" method="get">
+                        <button>← Back to Login</button>
+                    </form>
+                </div>
+            </div>
+            """)
 
     # Login successful
     return RedirectResponse(
