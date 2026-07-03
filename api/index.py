@@ -7,6 +7,7 @@ import io
 import os
 from supabase import create_client
 from datetime import datetime
+import bcrypt
 
 app = FastAPI()
 
@@ -218,7 +219,7 @@ def signup():
 
                 <input
                     name="full_name"
-                    placeholder="Full Name"
+                    placeholder="Username"
                     required
                 >
 
@@ -259,14 +260,20 @@ async def signup_post(request: Request):
     email = form.get("email")
     password = form.get("password")
 
-    print(full_name)
-    print(email)
-    print(password)
+    password_hash = bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    supabase.table("users").insert({
+        "full_name": full_name,
+        "email": email,
+        "password_hash": password_hash
+    }).execute()
 
     return HTMLResponse("""
-        <h2>Success!</h2>
-        <p>The form was submitted correctly.</p>
-        <a href="/">Back to login</a>
+        <h2>Account created successfully!</h2>
+        <a href="/">Go to Login</a>
     """)
 
 # ===== HOME =====
