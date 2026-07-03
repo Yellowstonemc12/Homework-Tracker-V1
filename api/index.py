@@ -167,22 +167,27 @@ def login():
     <div class="wrapper">
         <div class="card">
 
-            <h2>✨ Homework Tracker</h2>
-
+            <h2>✨ Homework Tracker YS</h2>
+            
+            <p>Welcome back.</p>
+            
             <form method="post" action="/login">
-
                 <input
                     name="username"
-                    placeholder="Enter your name"
+                    placeholder="Username"
                     required
                 >
-
-                <button>Enter</button>
-
+            
+                <button>Log In</button>
             </form>
-
-        </div>
-    </div>
+            
+            <br>
+            
+            <a href="/signup">
+                Create an account
+            </a>
+        <div>
+    <div>
     """
 
 @app.post("/login")
@@ -196,6 +201,54 @@ async def do_login(request: Request):
         url=f"/home?user={username}",
         status_code=303
     )
+
+
+@app.get("/signup", response_class=HTMLResponse)
+def signup():
+    return f"""
+    {style()}
+
+    <div class="wrapper">
+        <div class="card">
+
+            <h2>Create Account</h2>
+            <p>Sign up to use Homework Tracker YS.</p>
+
+            <form method="post" action="/signup">
+
+                <input
+                    name="full_name"
+                    placeholder="Full Name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                >
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                >
+
+                <button>Create Account</button>
+
+            </form>
+
+            <br>
+
+            <a href="/">
+                ← Back to Login
+            </a>
+
+        </div>
+    </div>
+    """
 
 # ===== HOME =====
 @app.get("/home", response_class=HTMLResponse)
