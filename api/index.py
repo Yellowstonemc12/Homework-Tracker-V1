@@ -260,11 +260,27 @@ async def signup_post(request: Request):
     email = form.get("email")
     password = form.get("password")
 
+    # Hash the password
     password_hash = bcrypt.hashpw(
         password.encode("utf-8"),
         bcrypt.gensalt()
     ).decode("utf-8")
 
+    # Check if the email already exists
+    existing = (
+        supabase.table("users")
+        .select("*")
+        .eq("email", email)
+        .execute()
+    )
+
+    if existing.data:
+        return HTMLResponse("""
+            <h2>Email already registered.</h2>
+            <a href="/signup">← Back</a>
+        """)
+
+    # Save the user
     supabase.table("users").insert({
         "full_name": full_name,
         "email": email,
@@ -272,7 +288,8 @@ async def signup_post(request: Request):
     }).execute()
 
     return HTMLResponse("""
-        <h2>Account created successfully!</h2>
+        <h2>🎉 Account created successfully!</h2>
+        <p>You can now log in.</p>
         <a href="/">Go to Login</a>
     """)
 
