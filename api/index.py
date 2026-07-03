@@ -9,6 +9,7 @@ from supabase import create_client
 from datetime import datetime
 import bcrypt
 
+
 app = FastAPI()
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
