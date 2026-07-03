@@ -189,10 +189,20 @@ def login():
                     required
                 >
             
+                <button>
+                    Log In
+                </button>
             
-            <a href="/signup">
-                Create an account
-            </a>
+            </form>
+            
+            <br>
+            
+            <p>
+                Don't have an account?
+                <a href="/signup">
+                    Create one →
+                </a>
+            </p>
         <div>
     <div>
     """
