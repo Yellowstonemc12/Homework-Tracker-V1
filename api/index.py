@@ -157,6 +157,15 @@ def style():
     .website-link:hover{
         color:#8b5cf6;
     }
+
+    .alert-error{
+        background:#fef2f2;
+        color:#b91c1c;
+        border:1px solid #fecaca;
+        border-radius:10px;
+        padding:12px;
+        margin-bottom:15px;
+    }    
     </style>
     """
 
@@ -225,9 +234,28 @@ async def do_login(request: Request):
 
     # User doesn't exist
     if not result.data:
-        return HTMLResponse("""
-            <h2>❌ Invalid email or password.</h2>
-            <a href="/">← Back</a>
+        return HTMLResponse(f"""
+        {style()}
+        
+        <div class="wrapper">
+            <div class="card">
+        
+                <div class="alert-error">
+                    ❌ Invalid email or password.
+                </div>
+        
+                <p>
+                    Please check your details and try again.
+                </p>
+        
+                <form action="/" method="get">
+                    <button>
+                        ← Back to Login
+                    </button>
+                </form>
+        
+            </div>
+        </div>
         """)
 
     user = result.data[0]
@@ -243,11 +271,12 @@ async def do_login(request: Request):
     <div class="wrapper">
         <div class="card">
     
-            <h2>❌ Login Failed</h2>
+            <div class="alert-error">
+                ❌ Invalid email or password.
+            </div>
     
             <p>
-                The email or password you entered is incorrect.
-                Please try again.
+                Please check your details and try again.
             </p>
     
             <form action="/" method="get">
