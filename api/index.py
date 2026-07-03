@@ -247,11 +247,11 @@ async def do_login(request: Request):
         password.encode("utf-8"),
         user["password_hash"].encode("utf-8")
     ):
-    return HTMLResponse("""
-        <h2>🎉 Account created successfully!</h2>
-        <p>You can now log in.</p>
-        <a href="/">Go to Login</a>
-    """)
+        return HTMLResponse("""
+            <h2>🎉 Account created successfully!</h2>
+            <p>You can now log in.</p>
+            <a href="/">Go to Login</a>
+        """)
 
     # Login successful
     return RedirectResponse(
