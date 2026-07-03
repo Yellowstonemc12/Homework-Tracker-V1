@@ -332,10 +332,27 @@ async def signup_post(request: Request):
         "password_hash": password_hash
     }).execute()
 
-    return HTMLResponse("""
-        <h2>🎉 Account created successfully!</h2>
-        <p>You can now log in.</p>
-        <a href="/">Go to Login</a>
+    return HTMLResponse(f"""
+    {style()}
+    
+    <div class="wrapper">
+        <div class="card">
+    
+            <h2>🎉 Account Created!</h2>
+    
+            <p>
+                Your account has been created successfully.
+                You can now log in.
+            </p>
+    
+            <form action="/" method="get">
+                <button>
+                    Go to Login →
+                </button>
+            </form>
+    
+        </div>
+    </div>
     """)
 
 # ===== HOME =====
