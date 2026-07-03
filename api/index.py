@@ -250,6 +250,25 @@ def signup():
     </div>
     """
 
+
+@app.post("/signup")
+async def signup_post(request: Request):
+    form = await request.form()
+
+    full_name = form.get("full_name")
+    email = form.get("email")
+    password = form.get("password")
+
+    print(full_name)
+    print(email)
+    print(password)
+
+    return HTMLResponse("""
+        <h2>Success!</h2>
+        <p>The form was submitted correctly.</p>
+        <a href="/">Back to login</a>
+    """)
+
 # ===== HOME =====
 @app.get("/home", response_class=HTMLResponse)
 def home(user: str = ""):
