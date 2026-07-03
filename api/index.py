@@ -212,10 +212,39 @@ async def do_login(request: Request):
 
     form = await request.form()
 
-    username = form.get("username")
+    email = form.get("email")
+    password = form.get("password")
 
+    # Find the user by email
+    result = (
+        supabase.table("users")
+        .select("*")
+        .eq("email", email)
+        .execute()
+    )
+
+    # User doesn't exist
+    if not result.data:
+        return HTMLResponse("""
+            <h2>❌ Invalid email or password.</h2>
+            <a href="/">← Back</a>
+        """)
+
+    user = result.data[0]
+
+    # Check password
+    if not bcrypt.checkpw(
+        password.encode("utf-8"),
+        user["password_hash"].encode("utf-8")
+    ):
+        return HTMLResponse("""
+            <h2>❌ Invalid email or password.</h2>
+            <a href="/">← Back</a>
+        """)
+
+    # Login successful
     return RedirectResponse(
-        url=f"/home?user={username}",
+        url=f"/home?user={user['full_name']}",
         status_code=303
     )
 
