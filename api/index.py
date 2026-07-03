@@ -237,10 +237,28 @@ async def do_login(request: Request):
         password.encode("utf-8"),
         user["password_hash"].encode("utf-8")
     ):
-        return HTMLResponse("""
-            <h2>❌ Invalid email or password.</h2>
-            <a href="/">← Back</a>
-        """)
+    return HTMLResponse(f"""
+    {style()}
+    
+    <div class="wrapper">
+        <div class="card">
+    
+            <h2>❌ Login Failed</h2>
+    
+            <p>
+                The email or password you entered is incorrect.
+                Please try again.
+            </p>
+    
+            <form action="/" method="get">
+                <button>
+                    ← Back to Login
+                </button>
+            </form>
+    
+        </div>
+    </div>
+    """)
 
     # Login successful
     return RedirectResponse(
