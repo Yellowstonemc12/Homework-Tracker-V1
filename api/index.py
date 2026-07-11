@@ -8,6 +8,7 @@ import os
 from supabase import create_client
 from datetime import datetime
 import bcrypt
+import { Analytics } from "@vercel/analytics/next"
 
 
 app = FastAPI()
